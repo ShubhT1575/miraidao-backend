@@ -1,28 +1,20 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const newuserplaceSchema = new Schema({
+const PackageBuySchema = new Schema({
   user: {
     type: String,
     required: true
   },
-  referrer: {
-    type: String,
-    required: true
-  },
-  poolId: {
-    type: Number,
-    required: true
-  },
   packageId: {
     type: Number,
-    default: 0
+    required: true
   },
-  place: {
+  amount: {
     type: Number,
     default: 0
   },
-  cycle: {
+  POLCoinAmt: {
     type: Number,
     default: 0
   },
@@ -39,12 +31,11 @@ const newuserplaceSchema = new Schema({
   timestamp: { type: Number, required: true },
 });
 
-// newuserplaceSchema.index(
-//   { user: 1, referrer: 1, txHash: 1 },
-//   { unique: true }
-// );
+PackageBuySchema.index(
+  { user: 1, packageId: 1, txHash: 1 },
+  { unique: true }
+);
 
+const PackageBuy = mongoose.model('PackageBuy', PackageBuySchema);
 
-const newuserplace = mongoose.model('newuserplace', newuserplaceSchema);
-
-module.exports = newuserplace;
+module.exports = PackageBuy;

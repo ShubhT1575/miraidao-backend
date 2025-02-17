@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const newuserplaceSchema = new Schema({
+const UpgradeSchema = new Schema({
   user: {
     type: String,
     required: true
@@ -15,10 +15,6 @@ const newuserplaceSchema = new Schema({
     required: true
   },
   packageId: {
-    type: Number,
-    default: 0
-  },
-  place: {
     type: Number,
     default: 0
   },
@@ -39,12 +35,11 @@ const newuserplaceSchema = new Schema({
   timestamp: { type: Number, required: true },
 });
 
-// newuserplaceSchema.index(
-//   { user: 1, referrer: 1, txHash: 1 },
+// UpgradeSchema.index(
+//   { user: 1, referrer: 1, poolId: 1, txHash: 1 },
 //   { unique: true }
 // );
 
+const Upgrade = mongoose.model('upgrade', UpgradeSchema);
 
-const newuserplace = mongoose.model('newuserplace', newuserplaceSchema);
-
-module.exports = newuserplace;
+module.exports = Upgrade;

@@ -34,7 +34,7 @@ async function connect() {
     }
 
     await mongoose.connect(uri, {
-      useUnifiedTopology: true, // Use the new URL parser by default
+      useNewUrlParser: true, // Use the new URL parser by default
     });
 
     logger.info("MongoDB: Connection established successfully");

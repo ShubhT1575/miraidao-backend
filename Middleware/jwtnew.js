@@ -1,11 +1,14 @@
 const jwt = require("jsonwebtoken");
+const token1 = "eyJhbGciOiJIUzI1NiJ9.U2h1YmhhbQ.-eSNfd5qbZgvOg94it2WOnpbyjK_G9MOx4MZqhruKpY"
 
-const verifyToken = async (req, res, next) => {
+
+
+const verifyTokennew = async (req, res, next) => {
   try {
     if (req.headers["authorization"] && req.headers.authorization) {
       const token = req.headers["authorization"].split(" ")[1];
       if (token) {
-        const jwtkey = process.env.JWT;
+        const jwtkey = token1;
         if (jwtkey) {
           jwt.verify(token, jwtkey, (err) => {
             if (err) {
@@ -20,7 +23,7 @@ const verifyToken = async (req, res, next) => {
                 return res.json({
                   status: 404,
                   error: true,
-                  message: "Invalid Token", err,
+                  message: "Invalid Token",
                 });
               }
             }
@@ -55,4 +58,4 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
-module.exports = {verifyToken};
+module.exports = {verifyTokennew};

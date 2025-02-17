@@ -13,7 +13,7 @@ const moment = require("moment-timezone");
 const stake2 = require("./model/stake");
 const registration = require("./model/registration");
 const dailyroi = require("./model/dailyroi");
-const withdraw = require("./model/withdraw");
+const withdraw = require("./model/Withdraw");
 const Adminlogin = require("./routers/adminlogin");
 const AuthRouter = require("./routers/auth");
 const Dashboard = require("./routers/dashborad");
@@ -22,10 +22,15 @@ const path = require("path");
 const directincome = require("./model/directincome");
 const dividentincome = require("./model/dividentincome");
 const autopoolincome = require("./model/autopoolincome");
-const upgrade = require("./model/upgrade");
+// const upgrade = require("./model/Upgrade");
 const recurringlevelincome = require("./model/recurringlevelincome");
 const newuserplace = require("./model/newuserplace");
 const recentincome = require("./model/recentincome");
+const UserIncome = require("./model/UserIncome");
+const Upgrade = require("./model/Upgrade");
+const PackageBuy = require("./model/PackageBuy");
+const ReEntry = require("./model/ReEntry");
+
 
 app.use(express.json());
 
@@ -49,11 +54,11 @@ app.use(
   })
 );
 
-app.use("/usdtuniver/api", routes);
-app.use("/usdtuniver/api", AuthRouter);
-app.use("/usdtuniver/api", Adminlogin);
-app.use("/usdtuniver/api", Dashboard);
-app.use("/usdtuniver/api", express.static(path.join(__dirname, "/public/upload")));
+app.use("/mirai/api", routes);
+app.use("/mirai/api", AuthRouter);
+app.use("/mirai/api", Adminlogin);
+app.use("/mirai/api", Dashboard);
+app.use("/mirai/api", express.static(path.join(__dirname, "/public/upload")));
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(process.env.RPC_URL, {
@@ -66,7 +71,7 @@ const web3 = new Web3(
   })
 );
 
-const ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"referrer","type":"address"},{"indexed":false,"internalType":"uint256","name":"place","type":"uint256"}],"name":"NewUserPlace","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"sender","type":"address"},{"indexed":true,"internalType":"address","name":"receiver","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"poolId","type":"uint256"}],"name":"RankUpgradeBonus","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"sender","type":"address"},{"indexed":true,"internalType":"address","name":"receiver","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"poolId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"level","type":"uint256"}],"name":"RecurringLevelIncome","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"sender","type":"address"},{"indexed":false,"internalType":"address","name":"reciever","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"ReferralBonus","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"referrer","type":"address"},{"indexed":true,"internalType":"uint256","name":"userId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"referrerId","type":"uint256"}],"name":"Registration","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"address","name":"referrer","type":"address"},{"indexed":false,"internalType":"uint256","name":"poolId","type":"uint256"}],"name":"Upgrade","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Withdraw","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"onOwnershipTransferred","type":"event"},{"inputs":[],"name":"ETHER","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"LAST_LEVEL","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"LAST_POOL","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"LAST_RECURRING_LEVEL","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"LAST_USERID_DIVIDENT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"LEVEL_DIVIDER","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"RECURRING_DIVIDER","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"RECURRING_SHARE","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"TIME_STEP","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"USDT","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"poolId","type":"uint256"}],"name":"buyPool","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"communityWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"findFreeX2Referrer","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint256","name":"_poolId","type":"uint256"}],"name":"getActiveX2Level","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint256","name":"royalityReward","type":"uint256"},{"internalType":"uint256","name":"deadline","type":"uint256"}],"name":"getWithdrawHash","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"idToAddress","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_usdt","type":"address"},{"internalType":"address","name":"_communityWallet","type":"address"},{"internalType":"address","name":"_owner","type":"address"}],"name":"initialize","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"isUserExists","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"refferar","type":"address"}],"name":"joinPlan","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"lastUserId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"levelShare","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"nonce","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"pools","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_newCommunityWallet","type":"address"}],"name":"setCommunityWallet","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_wallet","type":"address"}],"name":"setSignOperator","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"signOperator","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"users","outputs":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"referrer","type":"address"},{"internalType":"uint256","name":"directBonus","type":"uint256"},{"internalType":"uint256","name":"recurringLevelBonus","type":"uint256"},{"internalType":"uint256","name":"rankUpgradeBonus","type":"uint256"},{"internalType":"uint256","name":"royalityBonus","type":"uint256"},{"internalType":"uint256","name":"partnersCount","type":"uint256"},{"internalType":"uint256","name":"totalDirectMercury","type":"uint256"},{"internalType":"uint256","name":"lastPoolId","type":"uint256"},{"internalType":"uint256","name":"lossAmt","type":"uint256"},{"components":[{"internalType":"address","name":"currentReferrer","type":"address"},{"internalType":"address[]","name":"referrals","type":"address[]"}],"internalType":"struct USDTUniverse.X2","name":"x2Matrix","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"royalityReward","type":"uint256"},{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"},{"internalType":"uint256","name":"deadline","type":"uint256"}],"name":"withdrawWithSignature","outputs":[],"stateMutability":"nonpayable","type":"function"}]
+const ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"referrer","type":"address"},{"indexed":false,"internalType":"uint8","name":"packageId","type":"uint8"},{"indexed":false,"internalType":"uint256","name":"poolId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"place","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"cycle","type":"uint256"}],"name":"NewUserPlace","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint8","name":"packageId","type":"uint8"},{"indexed":false,"internalType":"uint256","name":"usdAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"POLCoinAmt","type":"uint256"}],"name":"PackageBuy","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"packageId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"reinvest","type":"uint256"}],"name":"ReEntry","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"referrer","type":"address"},{"indexed":false,"internalType":"uint256","name":"id","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"referrerId","type":"uint256"}],"name":"Registration","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"referrer","type":"address"},{"indexed":false,"internalType":"uint8","name":"_packageId","type":"uint8"},{"indexed":false,"internalType":"uint8","name":"_poolId","type":"uint8"},{"indexed":false,"internalType":"uint256","name":"cycle","type":"uint256"}],"name":"Upgrade","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"sender","type":"address"},{"indexed":true,"internalType":"address","name":"receiver","type":"address"},{"indexed":false,"internalType":"uint8","name":"packageId","type":"uint8"},{"indexed":false,"internalType":"uint8","name":"poolId","type":"uint8"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"reinvestCount","type":"uint256"}],"name":"UserIncome","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"usdReward","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"POLReward","type":"uint256"}],"name":"Withdraw","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"onOwnershipTransferred","type":"event"},{"inputs":[],"name":"aggregator","outputs":[{"internalType":"contract AggregatorV3Interface","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint8","name":"packageId","type":"uint8"}],"name":"buyMatrix","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"creatorFund","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"creatorWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint8","name":"_packageId","type":"uint8"},{"internalType":"uint8","name":"_poolId","type":"uint8"}],"name":"findReferrer","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint8","name":"_packageId","type":"uint8"}],"name":"getPendingCycle","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint8","name":"_packageId","type":"uint8"}],"name":"getReinvestCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_referrer","type":"address"},{"internalType":"uint8","name":"_packageId","type":"uint8"}],"name":"getX2Matrix","outputs":[{"internalType":"address","name":"currentRefferer","type":"address"},{"internalType":"address[]","name":"referrals","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_referrer","type":"address"},{"internalType":"uint8","name":"_packageId","type":"uint8"}],"name":"getX4Matrix","outputs":[{"internalType":"address","name":"currentRefferer","type":"address"},{"internalType":"address[]","name":"referrals","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_referrer","type":"address"},{"internalType":"uint8","name":"_packageId","type":"uint8"}],"name":"getX8Matrix","outputs":[{"internalType":"address","name":"currentRefferer","type":"address"},{"internalType":"address[]","name":"referrals","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"idToAddress","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_owner","type":"address"}],"name":"initialize","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"isUserExists","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"lastUserId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"matrixPackage","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_referrer","type":"address"},{"internalType":"uint8","name":"_packageId","type":"uint8"}],"name":"registrationEx","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newCreatorWallet","type":"address"}],"name":"setCreatorWallet","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint8","name":"","type":"uint8"},{"internalType":"uint8","name":"","type":"uint8"}],"name":"userIncomes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"users","outputs":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"referrer","type":"address"},{"internalType":"uint256","name":"partnersCount","type":"uint256"},{"internalType":"uint256","name":"avlReward","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_to","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint8","name":"","type":"uint8"},{"internalType":"uint8","name":"","type":"uint8"}],"name":"xdpCurrentvId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint8","name":"","type":"uint8"},{"internalType":"uint8","name":"","type":"uint8"}],"name":"xdpIndex","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint8","name":"","type":"uint8"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"xdpvId_number","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}];
 const contract = new web3.eth.Contract(ABI, process.env.MAIN_CONTRACT);
 
 async function getLastSyncBlock() {
@@ -86,6 +91,7 @@ async function getTimestamp(blockNumber) {
   return timestamp;
 }
 
+// 52649744
 async function processEvents(events) {
   //console.log("events.length ",events.length)
   for (let i = 0; i < events.length; i++) {
@@ -110,9 +116,9 @@ async function processEvents(events) {
           }
           //console.log(returnValues, "returnvalue", event);
           let userId = "";
-          const randomNumber = Math.floor(Math.random() * 100000);
-          const fiveDigitNumber = randomNumber.toString().padStart(8, "0");
-          userId = "UU" + fiveDigitNumber;
+          const randomNumber = Math.floor(Math.random() * 1000);
+          const fiveDigitNumber = randomNumber.toString().padStart(5, "0");
+          userId = "MiraiDao" + fiveDigitNumber;
           try {
             let isCreated = await registration.create({
               userId: userId,
@@ -139,178 +145,183 @@ async function processEvents(events) {
       } catch (e) {
         console.log("Error (Registration Event) :", e.message);
       }
-    } else if (event == "ReferralBonus") {
+    } else if (event == "UserIncome") {
       try {
 
       
-        const chkext = await directincome.findOne({ sender : returnValues.sender,reciever: returnValues.reciever, txHash : transactionHash })
+        // const chkext = await UserIncome.findOne({ sender : returnValues.sender,reciever: returnValues.reciever, txHash : transactionHash })
         
-        if(!chkext){
+        // if(!chkext){
 
-        const issv = await directincome.create({
+        const issv = await UserIncome.create({
           sender: returnValues.sender,
-          reciever: returnValues.reciever,
+          receiver: returnValues.receiver,
+          packageId: returnValues.packageId,
+          poolId: returnValues.poolId,  
           amount: returnValues.amount / 1e18,
+          reinvestCount: returnValues.reinvestCount,
           txHash: transactionHash,
           block: blockNumber,
           timestamp: timestamp,
         });
 
-        if(issv){
+        // if(issv){
 
-        await registration.updateOne(
-          { user: returnValues.reciever },
-          { $inc: { totalIncome: returnValues.amount / 1e18 } }
-        );
+        // await registration.updateOne(
+        //   { user: returnValues.reciever },
+        //   { $inc: { totalIncome: returnValues.amount / 1e18 } }
+        // );
 
-        }
+        // }
 
-        await recentincome.create({
-          sender: returnValues.sender,
-          receiver: returnValues.reciever,
-          income: returnValues.amount / 1e18,
-          income_type: "Direct Income",
-          txHash: transactionHash,
-        });
-      }
+        // await recentincome.create({
+        //   sender: returnValues.sender,
+        //   receiver: returnValues.reciever,
+        //   income: returnValues.amount / 1e18,
+        //   income_type: "Direct Income",
+        //   txHash: transactionHash,
+        // });
+      // }
       } catch (e) {
-        console.log("Error (Directincome Event) :", e.message);
+        console.log("Error (UserIncome Event) :", e.message);
       }
-    } else if (event == "DividentIncome") {
+    } else if (event == "PackageBuy") {
       try {
-
-        const chkext = await dividentincome.findOne({ user : returnValues.user, txHash : transactionHash })
-        
-        if(!chkext){
-          const issv = await dividentincome.create({
+         
+        // const chkext = await dividentincome.findOne({ user : returnValues.user, txHash : transactionHash })
+          console.log("sss",event)
+        // if(!chkext){
+          const issv = await PackageBuy.create({
           user: returnValues.user,
-          amount: returnValues.amount / 1e18,
+          packageId: returnValues.packageId,
+          amount: returnValues.usdAmount / 1e18,
+          POLCoinAmt: returnValues.POLCoinAmt / 1e18,
           txHash: transactionHash,
           block: blockNumber,
           timestamp: timestamp,
         });
         
-        if(issv){
-        await registration.updateOne(
-          { user: returnValues.user },
-          { $inc: { totalIncome: returnValues.amount / 1e18 } }
-        );
-        }
+        // if(issv){
+        // await registration.updateOne(
+        //   { user: returnValues.user },
+        //   { $inc: { totalIncome: returnValues.amount / 1e18 } }
+        // );
+        // }
 
-        await recentincome.create({
-          sender: returnValues.user,
-          receiver: returnValues.user,
-          income: returnValues.amount / 1e18,
-          income_type: "Divident Income",
-          txHash: transactionHash,
-        });
-        }
+        // await recentincome.create({
+        //   sender: returnValues.user,
+        //   receiver: returnValues.user,
+        //   income: returnValues.amount / 1e18,
+        //   income_type: "Divident Income",
+        //   txHash: transactionHash,
+        // });
+        // }
 
       } catch (e) {
-        console.log("Error (Dividentincome Event) :", e.message);
+        console.log("Error (PackageBuy Event) :", e.message);
       }
-    } else if (event == "RankUpgradeBonus") {
+    } else if (event == "ReEntry") {
       try {
 
-        const chkext = await autopoolincome.findOne({ sender : returnValues.sender, receiver : returnValues.receiver, poolId : returnValues.poolId, txHash : transactionHash })
+        // const chkext = await autopoolincome.findOne({ sender : returnValues.sender, receiver : returnValues.receiver, poolId : returnValues.poolId, txHash : transactionHash })
         
-        if(!chkext){
+        // if(!chkext){
 
-        const issv = await autopoolincome.create({
-          sender: returnValues.sender,
-          receiver: returnValues.receiver,
-          amount: returnValues.amount / 1e18,
-          poolId: returnValues.poolId,
+        const issv = await ReEntry.create({
+          user: returnValues.user,
+          packageId: returnValues.packageId,
+          reinvest: returnValues.reinvest,
           txHash: transactionHash,
           block: blockNumber,
           timestamp: timestamp,
         });
 
-        if(issv){
+        // if(issv){
 
-        await registration.updateOne(
-          { user: returnValues.receiver },
-          { $inc: { totalIncome: returnValues.amount / 1e18 } }
-        );
+        // await registration.updateOne(
+        //   { user: returnValues.receiver },
+        //   { $inc: { totalIncome: returnValues.amount / 1e18 } }
+        // );
 
-        }
+        // }
 
-        await recentincome.create({
-          sender: returnValues.sender,
-          receiver: returnValues.receiver,
-          income: returnValues.amount / 1e18,
-          income_type: "Rank Upgrade Bonus",
-          txHash: transactionHash,
-        });
+        // await recentincome.create({
+        //   sender: returnValues.sender,
+        //   receiver: returnValues.receiver,
+        //   income: returnValues.amount / 1e18,
+        //   income_type: "Rank Upgrade Bonus",
+        //   txHash: transactionHash,
+        // });
 
-      }
       } catch (e) {
-        console.log("Error (AutoPoolIncome Event) :", e.message);
+        console.log("Error (ReEntry Event) :", e.message);
       }
     } else if (event == "Upgrade") {
       try {
-        const chkext = await upgrade.findOne({ user : returnValues.user, poolId : returnValues.poolId, txHash : transactionHash })
+        // const chkext = await upgrade.findOne({ user : returnValues.user, poolId : returnValues.poolId, txHash : transactionHash })
         
-        if(!chkext){
+        // if(!chkext){
 
-        const isth = await upgrade.create({
+        const isth = await Upgrade.create({
           user: returnValues.user,
           referrer: returnValues.referrer,
-          poolId: returnValues.poolId,
+          poolId: returnValues._poolId,
+          packageId: returnValues._packageId,
+          cycle: returnValues.cycle,
           txHash: transactionHash,
           block: blockNumber,
           timestamp: timestamp,
         });
         
-        if(isth){
-          const poolId = returnValues.poolId;
-          let rank = "";
-          let amount = 0;
-          if (poolId == 1) {
-            rank = "STAR";
-            amount = 11;
-          } else if (poolId == 2) {
-            rank = "MERCURY";
-            amount = 16.5;
-          } else if (poolId == 3) {
-            rank = "VENUS";
-            amount = 33;
-          } else if (poolId == 4) {
-            rank = "EARTH";
-            amount = 66;
-          } else if (poolId == 5) {
-            rank = "MARS";
-            amount = 132;
-          } else if (poolId == 6) {
-            rank = "JUPITER";
-            amount = 264;
-          } else if (poolId == 7) {
-            rank = "SATURN";
-            amount = 528;
-          } else if (poolId == 8) {
-            rank = "URANUS";
-            amount = 1056;
-          } else if (poolId == 9) {
-            rank = "NEPTUNE";
-            amount = 2112;
-          } else if (poolId == 10) {
-            rank = "PLUTO";
-            amount = 4224;
-          } else if (poolId == 11) {
-            rank = "PLUTO";
-            amount = 8448;
-          }
+      //   if(isth){
+      //     const poolId = returnValues.poolId;
+      //     let rank = "";
+      //     let amount = 0;
+      //     if (poolId == 1) {
+      //       rank = "STAR";
+      //       amount = 11;
+      //     } else if (poolId == 2) {
+      //       rank = "MERCURY";
+      //       amount = 16.5;
+      //     } else if (poolId == 3) {
+      //       rank = "VENUS";
+      //       amount = 33;
+      //     } else if (poolId == 4) {
+      //       rank = "EARTH";
+      //       amount = 66;
+      //     } else if (poolId == 5) {
+      //       rank = "MARS";
+      //       amount = 132;
+      //     } else if (poolId == 6) {
+      //       rank = "JUPITER";
+      //       amount = 264;
+      //     } else if (poolId == 7) {
+      //       rank = "SATURN";
+      //       amount = 528;
+      //     } else if (poolId == 8) {
+      //       rank = "URANUS";
+      //       amount = 1056;
+      //     } else if (poolId == 9) {
+      //       rank = "NEPTUNE";
+      //       amount = 2112;
+      //     } else if (poolId == 10) {
+      //       rank = "PLUTO";
+      //       amount = 4224;
+      //     } else if (poolId == 11) {
+      //       rank = "PLUTO";
+      //       amount = 8448;
+      //     }
     
-          await registration.updateOne(
-            { user: returnValues.user },
-            {
-              $set: { rank: rank, ranknumber: poolId },
-              $inc: { invest_amount: amount },
-            }
-          );
-        }
+      //     await registration.updateOne(
+      //       { user: returnValues.user },
+      //       {
+      //         $set: { rank: rank, ranknumber: poolId },
+      //         $inc: { invest_amount: amount },
+      //       }
+      //     );
+      //   }
 
-       }
+      //  }
       } catch (e) {
         console.log("Error (Upgrade Event) :", e.message);
       }
@@ -357,6 +368,8 @@ async function processEvents(events) {
           user: returnValues.user,
           referrer: returnValues.referrer,
           place: returnValues.place,
+          packageId: returnValues.packageId,
+          cycle: returnValues.cycle,
           poolId: returnValues.poolId,
           txHash: transactionHash,
           block: blockNumber,

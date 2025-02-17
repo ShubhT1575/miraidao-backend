@@ -1,28 +1,16 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const newuserplaceSchema = new Schema({
+const ReEntrySchema = new Schema({
   user: {
     type: String,
     required: true
   },
-  referrer: {
-    type: String,
-    required: true
-  },
-  poolId: {
-    type: Number,
-    required: true
-  },
   packageId: {
     type: Number,
-    default: 0
+    required: true
   },
-  place: {
-    type: Number,
-    default: 0
-  },
-  cycle: {
+  reinvest: {
     type: Number,
     default: 0
   },
@@ -39,12 +27,11 @@ const newuserplaceSchema = new Schema({
   timestamp: { type: Number, required: true },
 });
 
-// newuserplaceSchema.index(
-//   { user: 1, referrer: 1, txHash: 1 },
-//   { unique: true }
-// );
+ReEntrySchema.index(
+  { user: 1, packageId: 1, txHash: 1 },
+  { unique: true }
+);
 
+const ReEntry = mongoose.model('ReEntry', ReEntrySchema);
 
-const newuserplace = mongoose.model('newuserplace', newuserplaceSchema);
-
-module.exports = newuserplace;
+module.exports = ReEntry;

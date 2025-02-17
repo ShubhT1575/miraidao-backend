@@ -1,30 +1,35 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const newuserplaceSchema = new Schema({
-  user: {
+const UserIncomeSchema = new Schema({
+    sender: {
     type: String,
     required: true
   },
-  referrer: {
+  receiver: {
     type: String,
+    required: true
+  },
+  packageId: {
+    type: Number,
     required: true
   },
   poolId: {
     type: Number,
     required: true
   },
-  packageId: {
+  amount: {
     type: Number,
-    default: 0
-  },
-  place: {
+    required: true
+  }, 
+  mirai: {
     type: Number,
-    default: 0
-  },
-  cycle: {
+    // required: true
+    default: 0,
+  }, 
+  reinvestCount: {
     type: Number,
-    default: 0
+    required: true
   },
   createdAt: {
     type: Date,
@@ -39,12 +44,12 @@ const newuserplaceSchema = new Schema({
   timestamp: { type: Number, required: true },
 });
 
-// newuserplaceSchema.index(
-//   { user: 1, referrer: 1, txHash: 1 },
-//   { unique: true }
-// );
+UserIncomeSchema.index(
+  { sender: 1, receiver: 1, packageId: 1,poolId:1, txHash: 1 },
+  { unique: true }
+);
 
 
-const newuserplace = mongoose.model('newuserplace', newuserplaceSchema);
+const UserIncome = mongoose.model('UserIncome', UserIncomeSchema);
 
-module.exports = newuserplace;
+module.exports = UserIncome;
