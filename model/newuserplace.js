@@ -39,10 +39,10 @@ const newuserplaceSchema = new Schema({
   timestamp: { type: Number, required: true },
 });
 
-// newuserplaceSchema.index(
-//   { user: 1, referrer: 1, txHash: 1 },
-//   { unique: true }
-// );
+newuserplaceSchema.index(
+  { user: 1, referrer: 1,poolId:1,packageId: 1,place:1,cycle:1, txHash: 1 },
+  { unique: true }
+);
 
 
 const newuserplace = mongoose.model('newuserplace', newuserplaceSchema);

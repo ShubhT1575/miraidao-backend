@@ -116,9 +116,9 @@ async function processEvents(events) {
           }
           //console.log(returnValues, "returnvalue", event);
           let userId = "";
-          const randomNumber = Math.floor(Math.random() * 1000);
-          const fiveDigitNumber = randomNumber.toString().padStart(5, "0");
-          userId = "MiraiDao" + fiveDigitNumber;
+          // const randomNumber = Math.floor(Math.random() * 1000);
+          const fiveDigitNumber = Math.floor(10000 + Math.random() * 90000).toString();
+          userId = fiveDigitNumber;
           try {
             let isCreated = await registration.create({
               userId: userId,
