@@ -11,6 +11,7 @@ const UserIncome = require("../model/UserIncome");
 const { default: axios } = require("axios");
 const PackageBuy = require("../model/PackageBuy");
 const newuserplace = require("../model/newuserplace");
+const AdminCred = require("../model/AdminCred");
 
 router.get("/dashborad", async (req, res) => {
   try {
@@ -166,6 +167,18 @@ router.get("/newuserplacePool", async (req,res)=>{
 router.get("/referralhistory", async (req,res)=>{
   const {referrer} = req.query;
   const data = await newuserplace.find({referrer: referrer}).sort({ createdAt: -1 });
+  res.json(data)
+})
+
+
+router.get("/adminlogin", async (req,res)=>{
+  const {email, password} = req.query;
+  const data = await AdminCred.findOne({email, password});
+  res.json(data)
+})
+router.get("/getallusers", async (req,res)=>{
+  // const {email, password} = req.query;
+  const data = await registration.find().sort({ createdAt: -1 });
   res.json(data)
 })
 // router.get("/home", async (req,res)=>{
