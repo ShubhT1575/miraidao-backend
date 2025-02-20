@@ -170,7 +170,7 @@ router.get("/referralhistory", async (req,res)=>{
 })
 router.get("/home", async (req,res)=>{
   const hello = "Hello World";
-  res.json(hello)
+  res.json({hello})
 })
 
 // router.get("/graph-data", verifyToken, async (req, res) => {
