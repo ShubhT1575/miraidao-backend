@@ -168,6 +168,10 @@ router.get("/referralhistory", async (req,res)=>{
   const data = await newuserplace.find({referrer: referrer}).sort({ createdAt: -1 });
   res.json(data)
 })
+router.get("/home", async (req,res)=>{
+  const hello = "Hello World";
+  res.json(hello)
+})
 
 // router.get("/graph-data", verifyToken, async (req, res) => {
 //   try {
