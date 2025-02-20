@@ -169,7 +169,8 @@ router.get("/referralhistory", async (req,res)=>{
   res.json(data)
 })
 router.get("/home", async (req,res)=>{
-  const hello = "Hello World";
+  // const hello = "Hello World";
+  const hello = "Hello0000 Worldxx";
   res.json({hello})
 })
 
