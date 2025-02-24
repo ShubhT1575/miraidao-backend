@@ -159,11 +159,32 @@ router.get("/newuserplace", async (req,res)=>{
   const data = await newuserplace.find({referrer: user}).sort({ createdAt: -1 });
   res.json(data)
 })
-router.get("/newuserplacePool", async (req,res)=>{
-  const {user, poolId } = req.query;
-  const data = await newuserplace.find({referrer: user , poolId: poolId}).sort({ createdAt: -1 });
-  res.json(data)
-})
+router.get("/newuserplacePool", async (req, res) => {
+  const { user, poolId } = req.query;
+
+  try {
+    // Step 1: Fetch records from newuserplace collection
+    const data = await newuserplace.find({ referrer: user, poolId: poolId }).sort({ createdAt: -1 });
+
+    // Step 2: For each record, find the corresponding user details from the registration schema
+    const mergedData = await Promise.all(data.map(async (record) => {
+      const userDetails = await registration.findOne({ user: record.user }); // Assuming userId is stored in newuserplace records
+
+      // Step 3: Merge the user details with the newuserplace record
+      return {
+        ...record.toObject(), // Convert Mongoose document to plain JavaScript object
+        userId: userDetails.userId // Add user details to the record
+      };
+    }));
+
+    // Step 4: Return the merged data as a JSON response
+    res.json(mergedData);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 router.get("/referralhistory", async (req,res)=>{
   const {referrer} = req.query;
   const data = await newuserplace.find({referrer: referrer}).sort({ createdAt: -1 });
