@@ -185,11 +185,27 @@ router.get("/newuserplacePool", async (req, res) => {
   }
 });
 
-router.get("/referralhistory", async (req,res)=>{
-  const {referrer} = req.query;
-  const data = await newuserplace.find({referrer: referrer}).sort({ createdAt: -1 });
-  res.json(data)
-})
+router.get("/referralhistory", async (req, res) => {
+  try {
+    const { referrer } = req.query;
+    const data = await newuserplace.find({ referrer: referrer }).sort({ createdAt: -1 });
+
+    const mergedData = await Promise.all(data.map(async (record) => {
+      const userDetails = await registration.findOne({ user: record.user }); // Find one user
+      
+      return {
+        ...record.toObject(),
+        userId: userDetails ? userDetails.userId : null // Ensure userId is handled properly
+      };
+    }));
+
+    res.json(mergedData);
+  } catch (error) {
+    console.error("Error fetching referral history:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 
 
 router.get("/adminlogin", async (req,res)=>{
