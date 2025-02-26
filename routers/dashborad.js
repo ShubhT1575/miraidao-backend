@@ -144,7 +144,7 @@ router.get("/dashboard", async (req,res)=>{
 
 router.get("/recentTransaction", async (req,res)=>{
   const {user} = req.query;
-  const data = await PackageBuy.find().sort({ createdAt: -1 });
+  const data = await PackageBuy.find({user}).sort({ createdAt: -1 });
   res.json(data)
 })
 

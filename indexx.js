@@ -236,6 +236,16 @@ async function processEvents(events) {
           timestamp: timestamp,
         });
 
+        const istr = await PackageBuy.create({
+          user: returnValues.user,
+          packageId: returnValues.packageId,
+          // amount: returnValues.usdAmount / 1e18,
+          // POLCoinAmt: returnValues.POLCoinAmt / 1e18,
+          txHash: transactionHash,
+          block: blockNumber,
+          timestamp: timestamp,
+        });
+
         // if(issv){
 
         // await registration.updateOne(
