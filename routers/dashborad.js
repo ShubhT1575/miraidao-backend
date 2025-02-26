@@ -187,7 +187,7 @@ router.get("/newuserplacePool", async (req, res) => {
       // Step 3: Merge the user details with the newuserplace record
       return {
         ...record.toObject(), // Convert Mongoose document to plain JavaScript object
-        userId: userDetails.userId // Add user details to the record
+        userId: userDetails ? userDetails.userId : null // Add user details to the record
       };
     }));
 
