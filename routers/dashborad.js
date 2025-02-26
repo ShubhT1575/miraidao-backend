@@ -151,7 +151,21 @@ router.get("/recentTransaction", async (req,res)=>{
 router.get("/Income", async (req,res)=>{
   const {user} = req.query;
   const data = await UserIncome.find({receiver: user}).sort({ createdAt: -1 });
-  res.json(data)
+
+  const mergedData = await Promise.all(data.map(async (record) => {
+    const userDetails = await registration.findOne({ user: record.sender }); // Assuming userId is stored in newuserplace records
+    // console.log(userDetails)
+
+    // Step 3: Merge the user details with the newuserplace record
+    return {
+      ...record.toObject(), // Convert Mongoose document to plain JavaScript object
+      userId: userDetails ? userDetails.userId : null // Add user details to the record
+    };
+  }));
+
+  // Step 4: Return the merged data as a JSON response
+  res.json(mergedData);
+  // res.json(data)
 })
 
 router.get("/newuserplace", async (req,res)=>{
