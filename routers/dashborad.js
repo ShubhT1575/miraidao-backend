@@ -255,6 +255,28 @@ router.get("/getallusers", async (req,res)=>{
   const data = await registration.find().sort({ createdAt: -1 });
   res.json(data)
 })
+
+router.get('/getAddressbyRefrralId', async (req, res) => {
+  try {
+    const { ref_id } = req.query;
+
+    // Check if targetBusiness is provided and is a valid number
+    if (!ref_id) {
+      return res.status(400).json({ error: 'ref_id is required' });
+    }
+
+    // Find all stakeReward records matching the targetBusiness criteria
+    const record = await registration.findOne({ user: ref_id });
+
+   
+
+    // Respond with the list of users and their associated registration details
+    res.status(200).json(record.user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 // router.get("/home", async (req,res)=>{
 //   // const hello = "Hello World";
 //   const hello = "Hello0000 Worldxx";
