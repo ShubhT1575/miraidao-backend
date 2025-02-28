@@ -31,7 +31,6 @@ const Upgrade = require("./model/Upgrade");
 const PackageBuy = require("./model/PackageBuy");
 const ReEntry = require("./model/ReEntry");
 
-
 app.use(express.json());
 
 app.use(
@@ -71,7 +70,509 @@ const web3 = new Web3(
   })
 );
 
-const ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"referrer","type":"address"},{"indexed":false,"internalType":"uint8","name":"packageId","type":"uint8"},{"indexed":false,"internalType":"uint256","name":"poolId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"place","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"cycle","type":"uint256"}],"name":"NewUserPlace","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint8","name":"packageId","type":"uint8"},{"indexed":false,"internalType":"uint256","name":"usdAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"POLCoinAmt","type":"uint256"}],"name":"PackageBuy","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"packageId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"reinvest","type":"uint256"}],"name":"ReEntry","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"referrer","type":"address"},{"indexed":false,"internalType":"uint256","name":"id","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"referrerId","type":"uint256"}],"name":"Registration","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"referrer","type":"address"},{"indexed":false,"internalType":"uint8","name":"_packageId","type":"uint8"},{"indexed":false,"internalType":"uint8","name":"_poolId","type":"uint8"},{"indexed":false,"internalType":"uint256","name":"cycle","type":"uint256"}],"name":"Upgrade","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"sender","type":"address"},{"indexed":true,"internalType":"address","name":"receiver","type":"address"},{"indexed":false,"internalType":"uint8","name":"packageId","type":"uint8"},{"indexed":false,"internalType":"uint8","name":"poolId","type":"uint8"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"reinvestCount","type":"uint256"}],"name":"UserIncome","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"usdReward","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"POLReward","type":"uint256"}],"name":"Withdraw","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"onOwnershipTransferred","type":"event"},{"inputs":[],"name":"aggregator","outputs":[{"internalType":"contract AggregatorV3Interface","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint8","name":"packageId","type":"uint8"}],"name":"buyMatrix","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"creatorFee","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint8","name":"","type":"uint8"}],"name":"creatorFund","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"creatorWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint8","name":"_packageId","type":"uint8"},{"internalType":"uint8","name":"_poolId","type":"uint8"}],"name":"findReferrer","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint8","name":"_packageId","type":"uint8"}],"name":"getDirectInvestment","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint8","name":"_packageId","type":"uint8"}],"name":"getInvestment","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint8","name":"_packageId","type":"uint8"}],"name":"getPendingCycle","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint8","name":"_packageId","type":"uint8"}],"name":"getReinvestCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_usdtAmt","type":"uint256"}],"name":"getTotalPOLCoin","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_referrer","type":"address"},{"internalType":"uint8","name":"_packageId","type":"uint8"}],"name":"getX2Matrix","outputs":[{"internalType":"address","name":"currentRefferer","type":"address"},{"internalType":"address[]","name":"referrals","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_referrer","type":"address"},{"internalType":"uint8","name":"_packageId","type":"uint8"}],"name":"getX4Matrix","outputs":[{"internalType":"address","name":"currentRefferer","type":"address"},{"internalType":"address[]","name":"referrals","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_referrer","type":"address"},{"internalType":"uint8","name":"_packageId","type":"uint8"}],"name":"getX8Matrix","outputs":[{"internalType":"address","name":"currentRefferer","type":"address"},{"internalType":"address[]","name":"referrals","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"idToAddress","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_owner","type":"address"}],"name":"initialize","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"isUserExists","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"lastUserId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"matrixPackage","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_referrer","type":"address"},{"internalType":"uint8","name":"_packageId","type":"uint8"}],"name":"registrationEx","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newCreatorWallet","type":"address"}],"name":"setCreatorWallet","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint8","name":"","type":"uint8"},{"internalType":"uint8","name":"","type":"uint8"}],"name":"userIncomes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"users","outputs":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"referrer","type":"address"},{"internalType":"uint256","name":"partnersCount","type":"uint256"},{"internalType":"uint256","name":"avlReward","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_to","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"withdrawCreatorFee","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint8","name":"","type":"uint8"},{"internalType":"uint8","name":"","type":"uint8"}],"name":"xdpCurrentvId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint8","name":"","type":"uint8"},{"internalType":"uint8","name":"","type":"uint8"}],"name":"xdpIndex","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint8","name":"","type":"uint8"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"xdpvId_number","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}];
+const ABI = [
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "referrer",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint8",
+        name: "packageId",
+        type: "uint8",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "poolId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "place",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "cycle",
+        type: "uint256",
+      },
+    ],
+    name: "NewUserPlace",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: false,
+        internalType: "uint8",
+        name: "packageId",
+        type: "uint8",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "usdAmount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "POLCoinAmt",
+        type: "uint256",
+      },
+    ],
+    name: "PackageBuy",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "packageId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "reinvest",
+        type: "uint256",
+      },
+    ],
+    name: "ReEntry",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "referrer",
+        type: "address",
+      },
+      { indexed: false, internalType: "uint256", name: "id", type: "uint256" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "referrerId",
+        type: "uint256",
+      },
+    ],
+    name: "Registration",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "referrer",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint8",
+        name: "_packageId",
+        type: "uint8",
+      },
+      { indexed: false, internalType: "uint8", name: "_poolId", type: "uint8" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "cycle",
+        type: "uint256",
+      },
+    ],
+    name: "Upgrade",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint8",
+        name: "packageId",
+        type: "uint8",
+      },
+      { indexed: false, internalType: "uint8", name: "poolId", type: "uint8" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "reinvestCount",
+        type: "uint256",
+      },
+    ],
+    name: "UserIncome",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "usdReward",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "POLReward",
+        type: "uint256",
+      },
+    ],
+    name: "Withdraw",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "onOwnershipTransferred",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "aggregator",
+    outputs: [
+      {
+        internalType: "contract AggregatorV3Interface",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint8", name: "packageId", type: "uint8" }],
+    name: "buyMatrix",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "creatorFee",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint8", name: "", type: "uint8" },
+    ],
+    name: "creatorFund",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "creatorWallet",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint8", name: "_packageId", type: "uint8" },
+      { internalType: "uint8", name: "_poolId", type: "uint8" },
+    ],
+    name: "findReferrer",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_user", type: "address" },
+      { internalType: "uint8", name: "_packageId", type: "uint8" },
+    ],
+    name: "getDirectInvestment",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_user", type: "address" },
+      { internalType: "uint8", name: "_packageId", type: "uint8" },
+    ],
+    name: "getInvestment",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_user", type: "address" },
+      { internalType: "uint8", name: "_packageId", type: "uint8" },
+    ],
+    name: "getPendingCycle",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getPrice",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_user", type: "address" },
+      { internalType: "uint8", name: "_packageId", type: "uint8" },
+    ],
+    name: "getReinvestCount",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_usdtAmt", type: "uint256" }],
+    name: "getTotalPOLCoin",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_referrer", type: "address" },
+      { internalType: "uint8", name: "_packageId", type: "uint8" },
+    ],
+    name: "getX2Matrix",
+    outputs: [
+      { internalType: "address", name: "currentRefferer", type: "address" },
+      { internalType: "address[]", name: "referrals", type: "address[]" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_referrer", type: "address" },
+      { internalType: "uint8", name: "_packageId", type: "uint8" },
+    ],
+    name: "getX4Matrix",
+    outputs: [
+      { internalType: "address", name: "currentRefferer", type: "address" },
+      { internalType: "address[]", name: "referrals", type: "address[]" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_referrer", type: "address" },
+      { internalType: "uint8", name: "_packageId", type: "uint8" },
+    ],
+    name: "getX8Matrix",
+    outputs: [
+      { internalType: "address", name: "currentRefferer", type: "address" },
+      { internalType: "address[]", name: "referrals", type: "address[]" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "idToAddress",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "_owner", type: "address" }],
+    name: "initialize",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "_user", type: "address" }],
+    name: "isUserExists",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "lastUserId",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "matrixPackage",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_referrer", type: "address" },
+      { internalType: "uint8", name: "_packageId", type: "uint8" },
+    ],
+    name: "registrationEx",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_newCreatorWallet", type: "address" },
+    ],
+    name: "setCreatorWallet",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "_newOwner", type: "address" }],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint8", name: "", type: "uint8" },
+      { internalType: "uint8", name: "", type: "uint8" },
+    ],
+    name: "userIncomes",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "users",
+    outputs: [
+      { internalType: "uint256", name: "id", type: "uint256" },
+      { internalType: "address", name: "referrer", type: "address" },
+      { internalType: "uint256", name: "partnersCount", type: "uint256" },
+      { internalType: "uint256", name: "avlReward", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "withdraw",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_to", type: "address" },
+      { internalType: "uint256", name: "_amount", type: "uint256" },
+    ],
+    name: "withdraw",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "withdrawCreatorFee",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint8", name: "", type: "uint8" },
+      { internalType: "uint8", name: "", type: "uint8" },
+    ],
+    name: "xdpCurrentvId",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint8", name: "", type: "uint8" },
+      { internalType: "uint8", name: "", type: "uint8" },
+    ],
+    name: "xdpIndex",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint8", name: "", type: "uint8" },
+      { internalType: "uint256", name: "", type: "uint256" },
+    ],
+    name: "xdpvId_number",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+];
 const contract = new web3.eth.Contract(ABI, process.env.MAIN_CONTRACT);
 
 async function getLastSyncBlock() {
@@ -116,9 +617,11 @@ async function processEvents(events) {
           }
           //console.log(returnValues, "returnvalue", event);
           let userId = "";
-          // const randomNumber = Math.floor(Math.random() * 1000);
-          const fiveDigitNumber = Math.floor(10000 + Math.random() * 90000).toString();
-          userId = fiveDigitNumber;
+          const nineDigitNumber = Math.floor(
+            100000000 + Math.random() * 900000000
+          ).toString();
+          userId = nineDigitNumber;
+
           try {
             let isCreated = await registration.create({
               userId: userId,
@@ -147,17 +650,15 @@ async function processEvents(events) {
       }
     } else if (event == "UserIncome") {
       try {
-
-      
         // const chkext = await UserIncome.findOne({ sender : returnValues.sender,reciever: returnValues.reciever, txHash : transactionHash })
-        
+
         // if(!chkext){
 
         const issv = await UserIncome.create({
           sender: returnValues.sender,
           receiver: returnValues.receiver,
           packageId: returnValues.packageId,
-          poolId: returnValues.poolId,  
+          poolId: returnValues.poolId,
           amount: returnValues.amount / 1e18,
           reinvestCount: returnValues.reinvestCount,
           txHash: transactionHash,
@@ -181,17 +682,16 @@ async function processEvents(events) {
         //   income_type: "Direct Income",
         //   txHash: transactionHash,
         // });
-      // }
+        // }
       } catch (e) {
         console.log("Error (UserIncome Event) :", e.message);
       }
     } else if (event == "PackageBuy") {
       try {
-         
         // const chkext = await dividentincome.findOne({ user : returnValues.user, txHash : transactionHash })
-          console.log("sss",event)
+        console.log("sss", event);
         // if(!chkext){
-          const issv = await PackageBuy.create({
+        const issv = await PackageBuy.create({
           user: returnValues.user,
           packageId: returnValues.packageId,
           amount: returnValues.usdAmount / 1e18,
@@ -200,7 +700,7 @@ async function processEvents(events) {
           block: blockNumber,
           timestamp: timestamp,
         });
-        
+
         // if(issv){
         // await registration.updateOne(
         //   { user: returnValues.user },
@@ -216,15 +716,13 @@ async function processEvents(events) {
         //   txHash: transactionHash,
         // });
         // }
-
       } catch (e) {
         console.log("Error (PackageBuy Event) :", e.message);
       }
     } else if (event == "ReEntry") {
       try {
-
         // const chkext = await autopoolincome.findOne({ sender : returnValues.sender, receiver : returnValues.receiver, poolId : returnValues.poolId, txHash : transactionHash })
-        
+
         // if(!chkext){
 
         const issv = await ReEntry.create({
@@ -262,14 +760,13 @@ async function processEvents(events) {
         //   income_type: "Rank Upgrade Bonus",
         //   txHash: transactionHash,
         // });
-
       } catch (e) {
         console.log("Error (ReEntry Event) :", e.message);
       }
     } else if (event == "Upgrade") {
       try {
         // const chkext = await upgrade.findOne({ user : returnValues.user, poolId : returnValues.poolId, txHash : transactionHash })
-        
+
         // if(!chkext){
 
         const isth = await Upgrade.create({
@@ -282,93 +779,96 @@ async function processEvents(events) {
           block: blockNumber,
           timestamp: timestamp,
         });
-        
-      //   if(isth){
-      //     const poolId = returnValues.poolId;
-      //     let rank = "";
-      //     let amount = 0;
-      //     if (poolId == 1) {
-      //       rank = "STAR";
-      //       amount = 11;
-      //     } else if (poolId == 2) {
-      //       rank = "MERCURY";
-      //       amount = 16.5;
-      //     } else if (poolId == 3) {
-      //       rank = "VENUS";
-      //       amount = 33;
-      //     } else if (poolId == 4) {
-      //       rank = "EARTH";
-      //       amount = 66;
-      //     } else if (poolId == 5) {
-      //       rank = "MARS";
-      //       amount = 132;
-      //     } else if (poolId == 6) {
-      //       rank = "JUPITER";
-      //       amount = 264;
-      //     } else if (poolId == 7) {
-      //       rank = "SATURN";
-      //       amount = 528;
-      //     } else if (poolId == 8) {
-      //       rank = "URANUS";
-      //       amount = 1056;
-      //     } else if (poolId == 9) {
-      //       rank = "NEPTUNE";
-      //       amount = 2112;
-      //     } else if (poolId == 10) {
-      //       rank = "PLUTO";
-      //       amount = 4224;
-      //     } else if (poolId == 11) {
-      //       rank = "PLUTO";
-      //       amount = 8448;
-      //     }
-    
-      //     await registration.updateOne(
-      //       { user: returnValues.user },
-      //       {
-      //         $set: { rank: rank, ranknumber: poolId },
-      //         $inc: { invest_amount: amount },
-      //       }
-      //     );
-      //   }
 
-      //  }
+        //   if(isth){
+        //     const poolId = returnValues.poolId;
+        //     let rank = "";
+        //     let amount = 0;
+        //     if (poolId == 1) {
+        //       rank = "STAR";
+        //       amount = 11;
+        //     } else if (poolId == 2) {
+        //       rank = "MERCURY";
+        //       amount = 16.5;
+        //     } else if (poolId == 3) {
+        //       rank = "VENUS";
+        //       amount = 33;
+        //     } else if (poolId == 4) {
+        //       rank = "EARTH";
+        //       amount = 66;
+        //     } else if (poolId == 5) {
+        //       rank = "MARS";
+        //       amount = 132;
+        //     } else if (poolId == 6) {
+        //       rank = "JUPITER";
+        //       amount = 264;
+        //     } else if (poolId == 7) {
+        //       rank = "SATURN";
+        //       amount = 528;
+        //     } else if (poolId == 8) {
+        //       rank = "URANUS";
+        //       amount = 1056;
+        //     } else if (poolId == 9) {
+        //       rank = "NEPTUNE";
+        //       amount = 2112;
+        //     } else if (poolId == 10) {
+        //       rank = "PLUTO";
+        //       amount = 4224;
+        //     } else if (poolId == 11) {
+        //       rank = "PLUTO";
+        //       amount = 8448;
+        //     }
+
+        //     await registration.updateOne(
+        //       { user: returnValues.user },
+        //       {
+        //         $set: { rank: rank, ranknumber: poolId },
+        //         $inc: { invest_amount: amount },
+        //       }
+        //     );
+        //   }
+
+        //  }
       } catch (e) {
         console.log("Error (Upgrade Event) :", e.message);
       }
     } else if (event == "RecurringLevelIncome") {
       try {
-
-        const chkext = await recurringlevelincome.findOne({ sender : returnValues.sender, receiver : returnValues.receiver, poolId : returnValues.poolId, level: returnValues.level, txHash : transactionHash })
-        
-        if(!chkext){
-
-          const issv = await recurringlevelincome.create({
+        const chkext = await recurringlevelincome.findOne({
           sender: returnValues.sender,
           receiver: returnValues.receiver,
-          amount: returnValues.amount / 1e18,
           poolId: returnValues.poolId,
           level: returnValues.level,
           txHash: transactionHash,
-          block: blockNumber,
-          timestamp: timestamp,
         });
-        
-        if(issv){
-        await registration.updateOne(
-          { user: returnValues.receiver },
-          { $inc: { totalIncome: returnValues.amount / 1e18 } }
-        );
+
+        if (!chkext) {
+          const issv = await recurringlevelincome.create({
+            sender: returnValues.sender,
+            receiver: returnValues.receiver,
+            amount: returnValues.amount / 1e18,
+            poolId: returnValues.poolId,
+            level: returnValues.level,
+            txHash: transactionHash,
+            block: blockNumber,
+            timestamp: timestamp,
+          });
+
+          if (issv) {
+            await registration.updateOne(
+              { user: returnValues.receiver },
+              { $inc: { totalIncome: returnValues.amount / 1e18 } }
+            );
+          }
+
+          await recentincome.create({
+            sender: returnValues.sender,
+            receiver: returnValues.receiver,
+            income: returnValues.amount / 1e18,
+            income_type: "Recurring Level Income",
+            txHash: transactionHash,
+          });
         }
-
-        await recentincome.create({
-          sender: returnValues.sender,
-          receiver: returnValues.receiver,
-          income: returnValues.amount / 1e18,
-          income_type: "Recurring Level Income",
-          txHash: transactionHash,
-        });
-
-      }
       } catch (e) {
         console.log("Error (RecurringLevelIncome Event) :", e.message);
       }
@@ -1733,7 +2233,7 @@ async function updaterank() {
       } else if (poolId == 12) {
         rank = "MOON";
         amount = 8448;
-      } 
+      }
 
       await upgrade.updateOne({ _id: record._id }, { $set: { checked: 1 } });
 
