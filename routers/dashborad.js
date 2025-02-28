@@ -147,6 +147,11 @@ router.get("/recentTransaction", async (req,res)=>{
   const data = await PackageBuy.find({user}).sort({ createdAt: -1 });
   res.json(data)
 })
+router.get("/recentTransactionGlobal", async (req,res)=>{
+  // const {user} = req.query;
+  const data = await PackageBuy.find().sort({ createdAt: -1 });
+  res.json(data)
+})
 
 router.get("/Income", async (req,res)=>{
   const {user} = req.query;
@@ -202,18 +207,36 @@ router.get("/newuserplacePool", async (req, res) => {
 router.get("/referralhistory", async (req, res) => {
   try {
     const { referrer } = req.query;
+
+    // Fetch users referred by `referrer`
     const data = await registration.find({ referrer: referrer }).sort({ createdAt: -1 });
 
-    // const mergedData = await Promise.all(data.map(async (record) => { 
-    //   const userDetails = await registration.findOne({ user: record.user }); // Find one user
-      
+    // Fetch package purchases for referred users
+    const data2 = await PackageBuy.find({ user: { $in: data.map(d => d.user) } }).sort({ createdAt: -1 });
+
+    // Filter only packageId === 2
+    const filteredData = data2.filter(item => item.packageId === 2);
+
+    const mergedData = await Promise.all(filteredData.map(async (record) => {
+      const userDetails = await registration.findOne({ user: record.user }); // Assuming userId is stored in newuserplace records
+
+      // Step 3: Merge the user details with the newuserplace record
+      return {
+        ...record.toObject(), // Convert Mongoose document to plain JavaScript object
+        userId: userDetails ? userDetails.userId : null // Add user details to the record
+      };
+    }));
+
+    // Merge data with corresponding package details
+    // const mergedData = data.map(record => {
+    //   const packageDetails = filteredData.find(p => p.user === record.user);
     //   return {
     //     ...record.toObject(),
-    //     userId: userDetails ? userDetails.userId : null // Ensure userId is handled properly
+    //     packageDetails: packageDetails || null // Add package details if found, else null
     //   };
-    // }));
+    // });
 
-    res.json(data);
+    res.json({ data,mergedData });
   } catch (error) {
     console.error("Error fetching referral history:", error);
     res.status(500).json({ message: "Internal Server Error" });
