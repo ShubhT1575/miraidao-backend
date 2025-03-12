@@ -48,7 +48,7 @@ const Registration = new mongoose.Schema(
     // wallet_rewards: {type: Number, default : 0},
     // wallet_lapse: {type: Number, default : 0},
     // withdraw_status:{type: Number, default : 0},
-    txHash: { type: String, required: true, unique: true },
+    txHash: { type: String, required: true},
     block: { type: Number, required: true },
     timestamp: { type: Number, required: true },
     cal_status:{type:Number,default:0},
@@ -57,6 +57,11 @@ const Registration = new mongoose.Schema(
     }
   },
   { timestamps: true, collection: "Registration" }
+);
+
+Registration.index(
+  { user: 1, referrer: 1, txHash: 1 },
+  { unique: true }
 );
 
 module.exports = mongoose.model("Registration", Registration);
