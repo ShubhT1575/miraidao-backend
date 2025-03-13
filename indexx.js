@@ -485,6 +485,8 @@ async function planData(ratio, amount, curr) {
   }
 }
 
+
+
 async function listEvent() {
   let lastSyncBlock = await getLastSyncBlock();
   let latestBlock = await web3.eth.getBlockNumber();
