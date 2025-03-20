@@ -277,6 +277,86 @@ router.get('/getAddressbyRefrralId', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+router.get("/packagereport", async (req, res) => {
+  try {
+    const packages = await PackageBuy.find().sort({ createdAt: -1 });
+
+    const data = await Promise.all(
+      packages.map(async (pkg) => {
+        const user = await registration.findOne({ user: pkg.user });
+        return {
+          ...pkg.toObject(),
+          userId: user ? user.userId : null,
+        };
+      })
+    );
+
+    res.status(200).json({ success: true, data });
+  } catch (error) {
+    console.error("Error fetching package report:", error);
+    res.status(500).json({ success: false, message: "Server Error. Please try again later." });
+  }
+});
+
+router.get("/getclubreport", async (req, res) => {
+  try {
+    const { club } = req.query;
+
+    const clubData = await newuserplace.find({ poolId: club }).sort({ createdAt: -1 });
+    // .limit(50)
+
+    const enrichedData = await Promise.all(
+      clubData.map(async (entry) => {
+        const user = await registration.findOne({ user: entry.user });
+        return {
+          ...entry.toObject(),
+          userId: user ? user.userId : null,
+          referrerId: user ? user.referrerId : null,
+        };
+      })
+    );
+
+    res.status(200).json({ success: true, data: enrichedData });
+  } catch (error) {
+    console.error("Error fetching club report:", error);
+    res.status(500).json({ success: false, message: "Server Error. Please try again later." });
+  }
+});
+
+router.get("/totaldata", async (req, res) => {
+  try {
+    const totalUsers = await registration.countDocuments();
+
+    const [pool1Count, pool2Count, pool3Count] = await Promise.all([
+      newuserplace.countDocuments({ poolId: 1 }),
+      newuserplace.countDocuments({ poolId: 2 }),
+      newuserplace.countDocuments({ poolId: 3 }),
+    ]);
+
+    res.json({
+      success: true,
+      totalUsers,
+      pool1Users: pool1Count,
+      pool2Users: pool2Count,
+      pool3Users: pool3Count,
+    });
+  } catch (error) {
+    console.error("Error in /totaldata API:", error);
+    res.status(500).json({ success: false, message: "Server Error", error });
+  }
+});
+
+
+
+// router.get("/getPackageDetail",async (req,res)=>{
+//   const {user} = req.query;
+//   const data = await PackageBuy.find({user}).sort({ createdAt: -1 });
+//   res.json(data)
+// }
+// );
+
+
 // router.get("/home", async (req,res)=>{
 //   // const hello = "Hello World";
 //   const hello = "Hello0000 Worldxx";
