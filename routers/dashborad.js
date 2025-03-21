@@ -12,6 +12,10 @@ const { default: axios } = require("axios");
 const PackageBuy = require("../model/PackageBuy");
 const newuserplace = require("../model/newuserplace");
 const AdminCred = require("../model/AdminCred");
+// const registration = require("../model/registration");
+// const registration = require("../model/registration");
+// const registration = require("../model/registration");
+// const registration = require("../model/registration");
 
 router.get("/dashborad", async (req, res) => {
   try {
@@ -252,7 +256,7 @@ router.get("/adminlogin", async (req,res)=>{
 })
 router.get("/getallusers", async (req,res)=>{
   // const {email, password} = req.query;
-  const data = await registration.find().sort({ createdAt: -1 });
+  const data = await registration.find().sort({ createdAt: -1 }).limit(500);
   res.json(data)
 })
 
@@ -278,9 +282,54 @@ router.get('/getAddressbyRefrralId', async (req, res) => {
   }
 });
 
+router.get("/getPackageDetail", async (req, res) => {
+  try {
+    const { user } = req.query;
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: "User ID is required." });
+    }
+
+    // Get userId from Registration schema
+    const registrationData = await registration.findOne({ user });
+
+    if (!registrationData) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found in Registration schema.",
+      });
+    }
+
+    const userId = registrationData.userId;
+
+    // Fetch packages
+    const packageData = await PackageBuy.find({ user }).sort({ createdAt: -1 });
+
+    // Map userId into each package object
+    const enrichedData = packageData.map((pkg) => ({
+      ...pkg.toObject(),
+      userId: userId,
+    }));
+
+    res.status(200).json({
+      success: true,
+      data: enrichedData,
+      message: "Package details fetched successfully.",
+    });
+  } catch (err) {
+    console.error("Error fetching package details:", err);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching package details.",
+    });
+  }
+});
+
+
+
 router.get("/packagereport", async (req, res) => {
   try {
-    const packages = await PackageBuy.find().sort({ createdAt: -1 });
+    const packages = await PackageBuy.find().sort({ createdAt: -1 }).limit(500);
 
     const data = await Promise.all(
       packages.map(async (pkg) => {
@@ -303,7 +352,7 @@ router.get("/getclubreport", async (req, res) => {
   try {
     const { club } = req.query;
 
-    const clubData = await newuserplace.find({ poolId: club }).sort({ createdAt: -1 });
+    const clubData = await newuserplace.find({ poolId: club }).sort({ createdAt: -1 }).limit(500);
     // .limit(50)
 
     const enrichedData = await Promise.all(
@@ -346,6 +395,36 @@ router.get("/totaldata", async (req, res) => {
     res.status(500).json({ success: false, message: "Server Error", error });
   }
 });
+
+// In your Express backend
+// const apiKey = "54c9f3b7-340c-4840-a220-c122ae9e3225";
+router.get("/get-coin-price", async (req, res) => {
+  try {
+    const { symbol } = req.query; // e.g., POL
+    // const apiKey = "YOUR_CMC_API_KEY";
+
+    const response = await axios.get(
+      "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest",
+      {
+        params: {
+          symbol: symbol || "POL",
+          convert: "USD",
+        },
+        headers: {
+          "X-CMC_PRO_API_KEY": "54c9f3b7-340c-4840-a220-c122ae9e3225",
+        },
+      }
+    );
+
+    const price = response.data.data[symbol]?.quote.USD.price;
+
+    res.json({ success: true, price });
+  } catch (err) {
+    console.error("CMC API Error:", err.message);
+    res.status(500).json({ success: false, message: "Failed to fetch price" });
+  }
+});
+
 
 
 
